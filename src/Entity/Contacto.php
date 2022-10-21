@@ -3,28 +3,46 @@
 namespace App\Entity;
 
 use App\Repository\ContactoRepository;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ContactoRepository::class)]
 class Contacto
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
+    /**
+     * @ORM\Id
+     * @ORM\GeneratedValue
+     * @ORM\Column(type="integer")
+     */
+    private $id;
 
-    #[ORM\Column(length: 255)]
-    private ?string $nombre = null;
+    /**
+     * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank
+     * (message="El nombre es obligatorio")
+     */
+    private $nombre;
 
-    #[ORM\Column(length: 15)]
-    private ?string $telefono = null;
+    /**
+     * @ORM\Column(type="string", length=15)
+     * @Assert\NotBlank
+     * (message="El teléfono es obligatorio")
+     */
+    private $telefono;
 
-    #[ORM\Column(length: 255)]
-    private ?string $email = null;
+    /**
+     * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank()
+     * @Assert\Email
+     * (message="El email {{ value }} no es válido")
+     */
+    private $email;
 
-    #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Provincia $provincia = null;
+    /**
+     * @ORM\ManyToOne(targetEntity=Provincia::class)
+     */
+    private $provincia;
+
 
     public function getId(): ?int
     {
@@ -36,10 +54,9 @@ class Contacto
         return $this->nombre;
     }
 
-    public function setNombre(string $nombre): self
+    public function setNombre(?string $nombre): self
     {
         $this->nombre = $nombre;
-
         return $this;
     }
 
@@ -48,10 +65,9 @@ class Contacto
         return $this->telefono;
     }
 
-    public function setTelefono(string $telefono): self
+    public function setTelefono(?string $telefono): self
     {
         $this->telefono = $telefono;
-
         return $this;
     }
 
@@ -60,10 +76,9 @@ class Contacto
         return $this->email;
     }
 
-    public function setEmail(string $email): self
+    public function setEmail(?string $email): self
     {
         $this->email = $email;
-
         return $this;
     }
 
@@ -75,7 +90,6 @@ class Contacto
     public function setProvincia(?Provincia $provincia): self
     {
         $this->provincia = $provincia;
-
         return $this;
     }
 }
